@@ -8,8 +8,6 @@
 
 ## 1. Delivery Strategy
 - Delivery model: phased implementation with validation gates.
-- Recommended cadence: 2-week sprints.
-- Suggested total duration: 8-10 weeks for MVP to stable production.
 - Success definition:
   - Inbound support email is ingested reliably.
   - Acknowledgement sent within 60 seconds (P95).
@@ -28,7 +26,7 @@
 
 ## 3. Step-by-Step Plan
 
-### Step 1: Confirm Scope and Operating Model (Week 1)
+### Step 1: Confirm Scope and Operating Model
 1. Review and freeze MVP scope from SRS.
 2. Confirm Monday.com board design, statuses, and required fields.
 3. Confirm email provider integration path (Microsoft 365 or Google Workspace).
@@ -43,7 +41,7 @@ Deliverables:
 Exit criteria:
 - No open blockers for architecture and integration setup.
 
-### Step 2: Foundation Setup and Repo Bootstrap (Week 1)
+### Step 2: Foundation Setup and Repo Bootstrap
 1. Define project structure for services:
    - listener-service
    - triage-service
@@ -62,7 +60,7 @@ Deliverables:
 Exit criteria:
 - Local development environment boots cleanly.
 
-### Step 3: Security and Secrets Baseline (Week 1-2)
+### Step 3: Security and Secrets Baseline
 1. Set up secret management for API keys and credentials.
 2. Enforce no-hardcoded-secrets via pre-commit or CI checks.
 3. Implement RBAC for admin/service operations.
@@ -76,7 +74,7 @@ Deliverables:
 Exit criteria:
 - Security review passes for foundation layer.
 
-### Step 4: Build Email Intake Service (Week 2-3)
+### Step 4: Build Email Intake Service
 1. Implement mailbox listener (polling/webhook based on provider).
 2. Parse inbound email metadata, subject, body, and attachments.
 3. Add idempotency and duplicate detection.
@@ -90,7 +88,7 @@ Deliverables:
 Exit criteria:
 - 95%+ parsing success on representative sample dataset.
 
-### Step 5: Build Ticket Sync with Monday.com (Week 3)
+### Step 5: Build Ticket Sync with Monday.com
 1. Implement Monday.com client wrapper.
 2. Create ticket on new issue with required fields.
 3. Update ticket status/notes on lifecycle changes.
@@ -104,7 +102,7 @@ Deliverables:
 Exit criteria:
 - Successful create/update flow under normal and retry scenarios.
 
-### Step 6: Build Communication Service (Week 3-4)
+### Step 6: Build Communication Service
 1. Implement acknowledgement email templates.
 2. Ensure first acknowledgement is sent within SLA target.
 3. Add follow-up templates for missing details.
@@ -121,7 +119,7 @@ Deliverables:
 Exit criteria:
 - Acknowledgement latency meets <= 60s (P95) in staging tests.
 
-### Step 7: Build Reply Detection and Thread Continuity (Week 4)
+### Step 7: Build Reply Detection and Thread Continuity
 1. Detect replies via message headers and thread IDs.
 2. Apply fallback matching (subject normalization and sender rules).
 3. Prevent thread splitting and duplicate ticket creation.
@@ -135,7 +133,7 @@ Deliverables:
 Exit criteria:
 - >= 98% correct threading in test scenarios.
 
-### Step 8: Build AI Triage and Extraction (Week 4-5)
+### Step 8: Build AI Triage and Extraction
 1. Define issue taxonomy and intent categories.
 2. Implement extraction for entities (product, account, error terms, urgency).
 3. Generate triage summary and recommended next action.
@@ -149,7 +147,7 @@ Deliverables:
 Exit criteria:
 - Meets pilot target (>= 85% category precision).
 
-### Step 9: Build Orchestration and State Management (Week 5)
+### Step 9: Build Orchestration and State Management
 1. Implement state machine for lifecycle:
    - Received
    - Triaged
@@ -168,7 +166,7 @@ Deliverables:
 Exit criteria:
 - Full workflow passes end-to-end integration tests.
 
-### Step 10: Add Observability and Reporting (Week 5-6)
+### Step 10: Add Observability and Reporting
 1. Add centralized logging and trace IDs across services.
 2. Add metrics dashboards for volume, latency, failures, and SLA.
 3. Add alerts for queue backlogs, API errors, and ack latency breaches.
@@ -182,7 +180,7 @@ Deliverables:
 Exit criteria:
 - On-call can detect and triage major failure modes in < 10 minutes.
 
-### Step 11: Containerization and Jenkins CI/CD (Week 6)
+### Step 11: Containerization and Jenkins CI/CD
 1. Create Dockerfiles for each service.
 2. Define Docker Compose for local integration environment.
 3. Build Jenkins pipeline stages:
@@ -202,7 +200,7 @@ Deliverables:
 Exit criteria:
 - Green pipeline required for merge and deployment.
 
-### Step 12: QA Hardening and UAT (Week 7)
+### Step 12: QA Hardening and UAT
 1. Execute test matrix:
    - Functional scenarios
    - Negative/error scenarios
@@ -220,7 +218,7 @@ Deliverables:
 Exit criteria:
 - All critical/high defects resolved or explicitly accepted.
 
-### Step 13: Production Rollout (Week 8)
+### Step 13: Production Rollout
 1. Deploy with canary or phased rollout strategy.
 2. Monitor ack latency, ticket creation rate, and error rates closely.
 3. Keep human override active during hypercare period.
@@ -233,7 +231,7 @@ Deliverables:
 Exit criteria:
 - SLA and reliability metrics stable for agreed period.
 
-### Step 14: Post-Launch Optimization (Week 9-10)
+### Step 14: Post-Launch Optimization
 1. Improve triage precision and template quality from production data.
 2. Add advanced routing and auto-resolution for repetitive issue types.
 3. Optimize cost/performance for model and infrastructure usage.
