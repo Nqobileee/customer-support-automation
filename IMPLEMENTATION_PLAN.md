@@ -4,7 +4,7 @@
 - Project: Customer Support Automation for Tribetron
 - Based on: SRS v1.0
 - Date: 2026-03-18
-- Goal: Deliver a production-ready automated support workflow from inbound email to Monday.com ticketing with AI-assisted triage and response.
+- Goal: Deliver a production-ready automated support workflow from SMTP email intake to Monday.com ticketing with Claude-assisted triage and response, backed by MongoDB.
 
 ## 1. Delivery Strategy
 - Delivery model: phased implementation with validation gates.
@@ -29,7 +29,7 @@
 ### Step 1: Confirm Scope and Operating Model
 1. Review and freeze MVP scope from SRS.
 2. Confirm Monday.com board design, statuses, and required fields.
-3. Confirm email provider integration path (Microsoft 365 or Google Workspace).
+3. Confirm SMTP server integration details (host, port, TLS, auth, sender identity).
 4. Define SLA targets and escalation policy.
 5. Finalize response tone and support communication templates.
 
@@ -51,7 +51,7 @@ Exit criteria:
 2. Add shared libraries/modules for config, logging, error handling, and schema validation.
 3. Set up environment variable strategy and secret references.
 4. Add linting, formatting, and test framework configuration.
-5. Add initial API contracts and event schemas.
+5. Add initial API contracts, event schemas, and MongoDB collection/index definitions.
 
 Deliverables:
 - Working monorepo or multi-repo baseline.
@@ -61,7 +61,7 @@ Exit criteria:
 - Local development environment boots cleanly.
 
 ### Step 3: Security and Secrets Baseline
-1. Set up secret management for API keys and credentials.
+1. Set up secret management for SMTP credentials, Claude API key, Monday.com token, and MongoDB URI.
 2. Enforce no-hardcoded-secrets via pre-commit or CI checks.
 3. Implement RBAC for admin/service operations.
 4. Define audit event schema for sensitive actions.
@@ -75,7 +75,7 @@ Exit criteria:
 - Security review passes for foundation layer.
 
 ### Step 4: Build Email Intake Service
-1. Implement mailbox listener (polling/webhook based on provider).
+1. Implement SMTP-based inbound/outbound handling service.
 2. Parse inbound email metadata, subject, body, and attachments.
 3. Add idempotency and duplicate detection.
 4. Create normalized message event payload.
@@ -142,7 +142,7 @@ Exit criteria:
 
 Deliverables:
 - AI triage pipeline integrated into workflow.
-- Prompt/model versioning and evaluation harness.
+- Claude prompt/model versioning and evaluation harness.
 
 Exit criteria:
 - Meets pilot target (>= 85% category precision).
@@ -247,16 +247,22 @@ Exit criteria:
 ## 4. Technical Work Breakdown by Component
 
 ### Email Listener
-- Provider auth integration
+- SMTP integration and authentication
 - Message parser
 - Attachment handling
 - Idempotency guard
 
 ### Triage Engine
-- Prompt/model orchestration
+- Claude prompt/model orchestration
 - Intent classification
 - Entity extraction
 - Confidence-based routing
+
+### Data Layer
+- MongoDB connection and configuration
+- Collection design (customers, tickets, messages, ai_insights, audit_events)
+- Index strategy for thread lookup, status filtering, and audit queries
+- Backup and retention policy
 
 ### Monday Sync
 - Ticket create/update APIs
@@ -282,7 +288,7 @@ Exit criteria:
 - Unit tests:
   - Parsers, mappers, state transitions, retry logic.
 - Integration tests:
-  - Email provider sandbox, Monday API sandbox, end-to-end flows.
+  - SMTP test server, Claude API integration, Monday API sandbox, MongoDB-backed end-to-end flows.
 - AI evaluation tests:
   - Intent precision, extraction recall, confidence calibration.
 - Performance tests:
@@ -311,7 +317,7 @@ Exit criteria:
 
 ## 8. Immediate Next 5 Actions
 1. Finalize Monday.com board schema and required columns.
-2. Confirm email provider/API approach and credentials.
-3. Create repository/service skeleton and shared contracts.
-4. Stand up Docker Compose local environment.
-5. Create Jenkins pipeline with lint and test stages first.
+2. Confirm SMTP server details and credentials.
+3. Provision MongoDB and define initial collections/indexes.
+4. Configure Claude API access and baseline prompts.
+5. Create repository/service skeleton and Jenkins pipeline with lint and test stages first.

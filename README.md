@@ -25,12 +25,13 @@ Customers email support@tribetron.com, the system ingests requests, performs AI 
 ## Recommended Tech Stack
 - Language: Python
 - API framework: FastAPI
+- AI model: Claude (Anthropic)
 - Background jobs: Celery or RQ
 - Queue/cache: Redis
-- Database: PostgreSQL
+- Database: MongoDB
 - Containerization: Docker, Docker Compose
 - CI/CD: Jenkins
-- Integrations: Email provider API (Microsoft 365 or Google Workspace), Monday.com API
+- Integrations: SMTP email integration, Monday.com API, Claude API
 
 ## Suggested Service Layout
 - listener-service: Inbound email ingestion, parsing, deduplication
@@ -79,10 +80,10 @@ Pipeline should include:
 
 ## Immediate Next Actions
 1. Finalize Monday.com board schema and status taxonomy.
-2. Confirm email provider/API approach and credentials.
+2. Confirm SMTP server details and credentials.
 3. Scaffold service directories and shared contracts.
-4. Add Docker Compose for local end-to-end testing.
-5. Add initial Jenkins pipeline with lint and test stages.
+4. Provision MongoDB and define initial collections/indexes.
+5. Add Claude API configuration and initial Jenkins pipeline with lint and test stages.
 
 ## Notes
 - This repository currently contains planning artifacts first.

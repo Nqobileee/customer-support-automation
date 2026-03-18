@@ -13,14 +13,14 @@ This SRS defines the requirements for an intelligent customer support automation
 
 ## 2. Scope
 The system will:
-- Listen to inbound support emails continuously.
+- Listen to inbound support emails continuously via SMTP integration.
 - Auto-respond to customers and gather missing details/scope.
 - Create and maintain logs/tickets in Monday.com automatically.
 - Notify customers that their ticket is being worked on.
 - Maintain a structured communication thread with each customer.
 - Detect customer replies and continue the same ticket context.
-- Use AI/NLP to understand customer intent and concepts.
-- Operate on a server-based architecture with managed API keys.
+- Use AI/NLP to understand customer intent and concepts using Claude.
+- Operate on a server-based architecture with managed API keys and MongoDB data storage.
 - Include CI/CD with Jenkins and containerization with Docker.
 - Integrate Monday.com automation and operational email checks.
 
@@ -51,7 +51,7 @@ The solution is an event-driven support assistant.
 
 ### FR-01 Email Intake
 - The system shall monitor support@tribetron.com 24/7.
-- The system shall ingest inbound email metadata, body, and attachments.
+- The system shall ingest inbound email metadata, body, and attachments through SMTP handling.
 - The system shall identify duplicate or repeated submissions.
 
 ### FR-02 Automated First Response
@@ -91,7 +91,7 @@ The solution is an event-driven support assistant.
 - The system shall prevent thread splitting for the same issue.
 
 ### FR-07 Intelligent Understanding
-- The system shall classify intent and issue category using AI.
+- The system shall classify intent and issue category using Claude.
 - The system shall extract entities (product name, account, dates, error text).
 - The system shall determine sentiment and potential escalation risk.
 - The system shall propose likely solutions from internal knowledge sources.
@@ -153,12 +153,20 @@ The solution is an event-driven support assistant.
 ## 8. Integration Requirements
 
 ### IR-01 Email Provider
-- Integrate with Microsoft 365 or Google Workspace APIs (or IMAP/SMTP fallback).
+- Integrate with SMTP for inbound and outbound email processing.
 
 ### IR-02 Monday.com
 - Use Monday.com APIs for board/item create/update and automation triggers.
 
+### IR-03 AI Model Provider
+- Integrate with Claude API for intent classification, extraction, and response drafting.
+
 ## 9. Architecture and Deployment
+
+### 9.0 Technology Decisions
+- Email transport: SMTP
+- AI model: Claude
+- Database: MongoDB
 
 ### 9.1 Core Services
 - Listener Service: Polls/webhooks for inbound messages.
@@ -167,6 +175,7 @@ The solution is an event-driven support assistant.
 - Communication Service: Outbound email/reply manager.
 - Orchestration Layer: Workflow/state machine and retries.
 - Admin Portal/API: Configuration, templates, reporting, and key management.
+- Data Store: MongoDB collections for customers, tickets, messages, AI insights, and audit events.
 
 ### 9.2 Docker Requirements
 - All services shall be containerized.
@@ -183,6 +192,7 @@ The solution is an event-driven support assistant.
 - Pipeline shall enforce quality gates before deployment.
 
 ## 10. Data Model (Minimum)
+- Data storage implementation: MongoDB
 - Customer: customer_id, name, email, organization.
 - Ticket: ticket_id, channel, category, priority, status, owner, created_at, updated_at.
 - Message: message_id, ticket_id, direction, subject, body, attachments, timestamp.
@@ -228,5 +238,5 @@ The solution is an event-driven support assistant.
 ## 16. Open Items for Confirmation
 - Final SLA targets by priority level.
 - Monday.com board schema and status taxonomy.
-- Approved AI model/provider and hosting constraints.
+- Claude model version and hosting constraints.
 - Escalation matrix and on-call policy.
