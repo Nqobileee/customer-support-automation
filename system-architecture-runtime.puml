@@ -1,0 +1,42 @@
+@startuml
+top to bottom direction
+skinparam shadowing false
+skinparam linetype ortho
+
+title Customer Support Automation - System Architecture (Runtime / Infrastructure View)
+
+actor Customer
+actor "Support Agent" as Agent
+actor "Support Manager" as Manager
+
+cloud "SMTP Provider" as SMTP
+
+node "Container Platform" {
+  frame "Support Automation Stack" {
+    component "Application Services\n- listener-service\n- triage-service\n- orchestration-service\n- ticket-sync-service\n- communication-service\n- admin-api" as Services
+    queue "Redis" as Redis
+    database "MongoDB" as Mongo
+    component "Secret Manager" as Secrets
+    component "Observability\n(Logs/Metrics/Traces)" as Telemetry
+  }
+}
+
+cloud "Monday.com API" as Monday
+cloud "Claude API" as Claude
+node "Jenkins CI/CD" as Jenkins
+
+Customer -down-> SMTP : support email
+SMTP -down-> Services : inbound/outbound mail
+Services -down-> Redis : async workflow events
+Services -down-> Mongo : persist state and audit
+Services -down-> Monday : ticket create/update
+Services -down-> Claude : triage and drafting
+
+Agent -down-> Services : review and override
+Manager -down-> Services : SLA/reporting
+
+Jenkins -down-> Services : build and deploy
+Services -down-> Secrets : read credentials
+Services -down-> Telemetry : emit traces and metrics
+
+@enduml

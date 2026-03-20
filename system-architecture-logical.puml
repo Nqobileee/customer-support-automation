@@ -1,0 +1,36 @@
+@startuml
+top to bottom direction
+skinparam componentStyle rectangle
+skinparam linetype ortho
+
+title Customer Support Automation - System Architecture (Logical View)
+
+actor Customer
+actor "Support Agent" as Agent
+actor "Support Manager" as Manager
+
+component "SMTP Gateway" as SMTP
+component "Application Services\n- Listener\n- Triage\n- Orchestration\n- Ticket Sync\n- Communication\n- Admin API" as Services
+component "Monday.com Adapter" as MondayAdapter
+component "Claude Adapter" as ClaudeAdapter
+
+component "Redis Queue/Cache" as Redis
+database "MongoDB" as Mongo
+component "Secret Manager" as Secrets
+component "Observability\n(Logs, Metrics, Traces)" as Obs
+
+Customer -down-> SMTP : support request
+SMTP -down-> Services : inbound/outbound mail
+Services -down-> ClaudeAdapter : triage calls
+Services -down-> MondayAdapter : ticket sync calls
+Services -down-> Redis : async events
+Services -down-> Mongo : state and audit data
+Services -down-> Secrets : credentials
+Services -down-> Obs : telemetry
+
+Services -down-> Agent : escalation and review tasks
+Agent -down-> Services : approve/override
+Manager -down-> Services : SLA and reports
+SMTP -down-> Customer : acknowledgement/updates
+
+@enduml
