@@ -1,0 +1,45 @@
+@startuml
+
+title Customer Support Automation - Activity Diagram
+
+(*) --> "Receive inbound email"
+--> "Parse metadata, body, attachments"
+
+if "Duplicate submission?" then
+  -->[yes] "Link to existing ticket"
+  --> "Send duplicate acknowledgement"
+  --> (*)
+else
+  -->[no] "Create message event"
+endif
+
+--> "Run AI triage\n(intent, entities, sentiment, confidence)"
+
+if "Existing thread found?" then
+  -->[yes] "Update existing Monday.com ticket"
+else
+  -->[no] "Create new Monday.com ticket"
+endif
+
+--> "Send acknowledgement with ticket reference"
+
+if "Missing details?" then
+  -->[yes] "Send follow-up questions"
+  --> "Wait for customer reply"
+  --> "Append reply to same thread"
+else
+  -->[no] "Proceed with available details"
+endif
+
+if "Low confidence or high risk?" then
+  -->[yes] "Escalate to support agent"
+  --> "Agent reviews AI summary"
+  --> "Agent approves or overrides response"
+else
+  -->[no] "Continue automated handling"
+endif
+
+--> "Send status/resolution update to customer"
+--> "Update ticket state and audit logs"
+--> (*)
+@enduml

@@ -1,0 +1,60 @@
+@startuml
+top to bottom direction
+skinparam packageStyle rectangle
+skinparam actorStyle awesome
+
+title Customer Support Automation - Use Case Diagram
+
+actor Customer
+actor "Support Agent" as Agent
+actor "Support Manager" as Manager
+
+rectangle "Customer Support Automation Platform" {
+  usecase "Submit Support Request\n(via Email)" as UC_Submit
+  usecase "Receive Acknowledgement" as UC_Ack
+  usecase "Provide Missing Details" as UC_Details
+  usecase "Receive Status Updates" as UC_Status
+  usecase "Receive Resolution\nNotification" as UC_Resolved
+
+  usecase "Ingest and Parse\nInbound Email" as UC_Ingest
+  usecase "Classify Intent and\nExtract Entities" as UC_Triage
+  usecase "Create/Update\nMonday.com Ticket" as UC_Ticket
+  usecase "Maintain Thread\nContinuity" as UC_Thread
+  usecase "Send Follow-up\nQuestions" as UC_FollowUp
+  usecase "Send Structured\nCustomer Replies" as UC_Comm
+  usecase "Escalate High-Risk or\nLow-Confidence Cases" as UC_Escalate
+
+  usecase "Review AI Summary and\nRecommendations" as UC_Review
+  usecase "Approve or Override\nAI Response" as UC_Override
+  usecase "Update Ticket and\nClose Case" as UC_Close
+  usecase "Monitor SLA and\nOperational Metrics" as UC_Monitor
+}
+
+Customer --> UC_Submit
+Customer --> UC_Details
+Customer --> UC_Ack
+Customer --> UC_Status
+Customer --> UC_Resolved
+
+Agent --> UC_Review
+Agent --> UC_Override
+Agent --> UC_Close
+
+Manager --> UC_Monitor
+Manager --> UC_Escalate
+
+UC_Submit ..> UC_Ingest : <<include>>
+UC_Ingest ..> UC_Triage : <<include>>
+UC_Triage ..> UC_Ticket : <<include>>
+UC_Ingest ..> UC_Thread : <<include>>
+UC_Triage ..> UC_FollowUp : <<extend>>
+UC_FollowUp ..> UC_Comm : <<include>>
+UC_Ticket ..> UC_Comm : <<include>>
+UC_Triage ..> UC_Escalate : <<extend>>
+UC_Escalate ..> UC_Review : <<include>>
+UC_Review ..> UC_Override : <<include>>
+UC_Override ..> UC_Comm : <<include>>
+UC_Close ..> UC_Ticket : <<include>>
+UC_Monitor ..> UC_Escalate : <<extend>>
+
+@enduml

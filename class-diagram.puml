@@ -1,0 +1,119 @@
+@startuml
+top to bottom direction
+skinparam classAttributeIconSize 0
+
+title Customer Support Automation - Class Diagram
+
+class Customer {
+  +customer_id: String
+  +name: String
+  +email: String
+  +organization: String
+}
+
+class Ticket {
+  +ticket_id: String
+  +channel: String
+  +category: String
+  +priority: String
+  +status: String
+  +owner: String
+  +created_at: DateTime
+  +updated_at: DateTime
+}
+
+class Message {
+  +message_id: String
+  +ticket_id: String
+  +direction: String
+  +subject: String
+  +body: Text
+  +attachments: List
+  +timestamp: DateTime
+}
+
+class AIInsight {
+  +ticket_id: String
+  +intent: String
+  +entities: Map
+  +sentiment: String
+  +confidence: Float
+  +recommendations: List
+}
+
+class AuditEvent {
+  +event_id: String
+  +actor: String
+  +action: String
+  +target: String
+  +timestamp: DateTime
+  +metadata: Map
+}
+
+class ListenerService {
+  +ingestEmail()
+  +parseMessage()
+  +detectDuplicate()
+}
+
+class TriageService {
+  +classifyIntent()
+  +extractEntities()
+  +scoreConfidence()
+}
+
+class TicketSyncService {
+  +createTicket()
+  +updateTicket()
+  +syncThreadEvents()
+}
+
+class CommunicationService {
+  +sendAcknowledgement()
+  +sendFollowUp()
+  +sendLifecycleUpdate()
+}
+
+class OrchestrationService {
+  +advanceState()
+  +handleEscalation()
+  +retryFailedStep()
+}
+
+class MondayClient {
+  +createItem()
+  +updateItem()
+}
+
+class ClaudeClient {
+  +analyzeIssue()
+  +draftResponse()
+}
+
+class MongoRepository {
+  +save(entity)
+  +findById(id)
+  +findByThread(threadId)
+}
+
+Customer "1" --> "0..*" Ticket : opens
+Ticket "1" --> "0..*" Message : contains
+Ticket "1" --> "0..*" AIInsight : has
+Ticket "1" --> "0..*" AuditEvent : logs
+
+ListenerService --> Message : creates
+TriageService --> AIInsight : generates
+TicketSyncService --> Ticket : manages
+CommunicationService --> Message : sends
+OrchestrationService --> Ticket : transitions
+
+TicketSyncService --> MondayClient : uses
+TriageService --> ClaudeClient : uses
+
+ListenerService --> MongoRepository : persists
+TriageService --> MongoRepository : persists
+TicketSyncService --> MongoRepository : persists
+CommunicationService --> MongoRepository : persists
+OrchestrationService --> MongoRepository : persists
+
+@enduml

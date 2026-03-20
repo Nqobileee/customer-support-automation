@@ -1,0 +1,64 @@
+@startuml
+top to bottom direction
+
+title Customer Support Automation - Deployment Diagram
+
+node "Customer Channel" {
+  artifact "Customer Email Client"
+}
+
+node "Email Provider" {
+  artifact "SMTP Server"
+}
+
+node "Docker Host / Kubernetes Node" {
+  node "Support Automation Stack" {
+    artifact "listener-service container"
+    artifact "triage-service container"
+    artifact "ticket-sync-service container"
+    artifact "communication-service container"
+    artifact "orchestration-service container"
+    artifact "admin-api container"
+    artifact "redis queue/cache"
+  }
+}
+
+node "Data Layer" {
+  database "MongoDB"
+}
+
+node "External SaaS" {
+  artifact "Monday.com API"
+  artifact "Claude API"
+}
+
+node "Platform Tooling" {
+  artifact "Jenkins CI/CD"
+  artifact "Secret Manager"
+  artifact "Monitoring/Logging"
+}
+
+"Customer Email Client" --> "SMTP Server" : send support request
+"SMTP Server" --> "listener-service container" : inbound message
+
+"listener-service container" --> "triage-service container" : normalized event
+"triage-service container" --> "Claude API" : classify/extract
+"triage-service container" --> "orchestration-service container" : triage result
+
+"orchestration-service container" --> "ticket-sync-service container" : ticket command
+"ticket-sync-service container" --> "Monday.com API" : create/update item
+
+"orchestration-service container" --> "communication-service container" : outbound message command
+"communication-service container" --> "SMTP Server" : send reply
+
+"listener-service container" --> "MongoDB" : persist messages
+"triage-service container" --> "MongoDB" : persist AI insights
+"ticket-sync-service container" --> "MongoDB" : persist ticket mapping
+"orchestration-service container" --> "MongoDB" : persist state/audit
+"communication-service container" --> "MongoDB" : persist outbound logs
+
+"Support Automation Stack" --> "Secret Manager" : read secrets
+"Support Automation Stack" --> "Monitoring/Logging" : emit telemetry
+"Jenkins CI/CD" --> "Support Automation Stack" : build/deploy
+
+@enduml
