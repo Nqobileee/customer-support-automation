@@ -53,7 +53,7 @@ Customer Support Automation is an event-driven intelligent support platform for 
 
 The logical view shows the major components and their communication boundaries, independent of deployment topology.
 
-![Logical Architecture](system-architecture-logical.svg)
+![Logical Architecture](diagrams/svg-files/system-architecture-logical.svg)
 
 | Component | Responsibility |
 |---|---|
@@ -74,7 +74,7 @@ Actors: **Customer** (sends support requests), **Support Agent** (reviews escala
 
 The runtime view shows how components are deployed and interconnected at infrastructure level.
 
-![Runtime Architecture](system-architecture-runtime.svg)
+![Runtime Architecture](diagrams/svg-files/system-architecture-runtime.svg)
 
 All application services run inside a **Container Platform** (Docker / Kubernetes). External dependencies — SMTP provider, Monday.com, and Claude API — are consumed over HTTPS. Jenkins CI/CD builds and deploys container images into the platform. The Secret Manager, Observability stack (logs, metrics, traces), MongoDB, and Redis are co-located within the same deployment boundary.
 
@@ -84,7 +84,7 @@ All application services run inside a **Container Platform** (Docker / Kubernete
 
 The end-to-end lifecycle from email receipt to ticket resolution:
 
-![Activity Diagram](activity-diagram.svg)
+![Activity Diagram](diagrams/svg-files/activity-diagram.svg)
 
 | Step | Description |
 |---|---|
@@ -126,7 +126,7 @@ Received → Triaged → In Progress → Waiting on Customer → Resolved → Cl
 
 Backed by **MongoDB**. All collections are indexed for thread lookup, status filtering, and audit queries.
 
-![Class Diagram](class-diagram.svg)
+![Class Diagram](diagrams/svg-files/class-diagram.svg)
 
 | Collection | Key Fields |
 |---|---|
@@ -188,7 +188,7 @@ Entities extracted per message: product name, account ID, affected module, error
 
 The class diagram shows domain entities, service classes, and their relationships.
 
-![Class Diagram](class-diagram.svg)
+![Class Diagram](diagrams/svg-files/class-diagram.svg)
 
 **Domain entities:** `Customer`, `Ticket`, `Message`, `AIInsight`, `AuditEvent`
 
@@ -208,7 +208,7 @@ Key relationships:
 
 The Level-1 Data Flow Diagram maps all data stores, external systems, and processing stages.
 
-![Data Flow Diagram](dfd-diagram.svg)
+![Data Flow Diagram](diagrams/svg-files/dfd-diagram.svg)
 
 | Process | Inputs | Outputs |
 |---|---|---|
@@ -224,7 +224,7 @@ All processes emit audit events to **D4: Audit Log Store**.
 
 ## 10. Use Cases
 
-![Use Case Diagram](use-case-diagram.svg)
+![Use Case Diagram](diagrams/svg-files/use-case-diagram.svg)
 
 | Actor | Use Cases |
 |---|---|
@@ -238,7 +238,7 @@ AI-driven use cases included via `<<include>>`: Ingest and Parse Inbound Email, 
 
 ## 11. Deployment Architecture
 
-![Deployment Diagram](deployment-diagram.svg)
+![Deployment Diagram](diagrams/svg-files/deployment-diagram.svg)
 
 All services are containerised (Docker) and orchestrated on a single Docker host or Kubernetes node. Local integration uses Docker Compose.
 
