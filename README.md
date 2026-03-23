@@ -2,7 +2,7 @@
 
 Intelligent support automation platform for Tribetron.
 
-Customers email support@tribetron.com, the system ingests requests, performs AI triage, creates/updates Monday.com tickets, and manages structured customer communication with human-in-the-loop escalation for risky cases.
+Customers send an email, the system ingests requests, performs AI triage, creates/updates Monday.com tickets, and manages structured customer communication with human-in-the-loop escalation for risky cases.
 
 ## Project Goals
 - Listen to inbound support emails continuously.
